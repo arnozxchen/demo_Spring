@@ -1,11 +1,10 @@
 package com.arnozxchen.demo.controller;
 
-import com.arnozxchen.demo.dao.Student;
+import com.arnozxchen.demo.Response;
+import com.arnozxchen.demo.dto.StudentDTO;
 import com.arnozxchen.demo.service.StudentService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 public class StudentController {
@@ -14,7 +13,23 @@ public class StudentController {
     private StudentService studentService;
 
     @GetMapping("/student/{id}")
-    public Student getStudentById(@PathVariable long id) {
-        return studentService.getStudentById(id);
+    public Response<StudentDTO> getStudentById(@PathVariable long id) {
+        return Response.newSuccess(studentService.getStudentById(id));
+    }
+
+    @PostMapping("/student")
+    public Response<Long> addNewStudent(@RequestBody StudentDTO studentDTO) {
+        return Response.newSuccess(studentService.addNewStudent(studentDTO));
+    }
+
+    @DeleteMapping("/student/{id}")
+    public void deleteStudentById(@PathVariable long id) {
+        studentService.deleteStudentById(id);
+    }
+
+    @PutMapping("/student/{id}")
+    public Response<StudentDTO> updateStudentById(@PathVariable long id, @RequestParam(required = false) String name,
+                                                  @RequestParam(required = false) String email) {
+        return Response.newSuccess(studentService.updateStudentById(id, name, email));
     }
 }
